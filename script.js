@@ -27,7 +27,6 @@ function changeStep(delta) {
     goToStep(currentStep + delta);
 }
 
-// Función para alternar visibilidad de contraseña
 function togglePasswordVisibility(inputId, btn) {
     const input = document.getElementById(inputId);
     const isPassword = input.type === 'password';
@@ -39,10 +38,15 @@ function togglePasswordVisibility(inputId, btn) {
     btn.innerHTML = isPassword ? eyeOff : eyeOpen;
 }
 
-// Auxiliares de lectura
+// Validación: solo letras y números (sin acentos ni caracteres especiales)
+function sanitizeInput(value) {
+    return value.replace(/[^a-zA-Z0-9]/g, '');
+}
+
 function getVal(id) {
     const el = document.getElementById(id);
-    return el ? el.value : '';
+    if (!el) return '';
+    return sanitizeInput(el.value);
 }
 
 function getCheck(id) {
@@ -56,20 +60,6 @@ document.getElementById('hotlineEnabled').addEventListener('change', function() 
     generateXML();
 });
 
-function toggleVisibility(checkboxId, containerId) {
-    const checkbox = document.getElementById(checkboxId);
-    const container = document.getElementById(containerId);
-    if (checkbox && container) {
-        checkbox.addEventListener('change', function() {
-            container.style.display = this.checked ? 'block' : 'none';
-            generateXML();
-        });
-    }
-}
-
-toggleVisibility('speedDial1Enabled', 'speedDial1Fields');
-toggleVisibility('speedDial2Enabled', 'speedDial2Fields');
-
 document.getElementById('line1Enabled').addEventListener('change', function() {
     document.getElementById('line1Fields').style.display = this.checked ? 'block' : 'none';
     generateXML();
@@ -80,7 +70,7 @@ document.getElementById('line2Enabled').addEventListener('change', function() {
     generateXML();
 });
 
-// Generación XML
+// GENERACIÓN XML - SIN encoding
 function generateXML() {
     const mac = getVal('macAddress');
     const timeZone = getVal('timeZone');
@@ -88,134 +78,262 @@ function generateXML() {
     const sipServer = getVal('sipServer');
     const sipPort = getVal('sipPort');
     const registerExpires = getVal('registerExpires');
+    const phoneLabel = getVal('phoneLabel');
+    const sshUser = getVal('sshUser');
+    const sshPass = getVal('sshPass');
+    const directoryURL = getVal('directoryURL');
 
     const line1Enabled = getCheck('line1Enabled');
     const line1DisplayName = getVal('line1DisplayName');
     const line1Extension = getVal('line1Extension');
     const line1AuthName = getVal('line1AuthName');
     const line1Password = getVal('line1Password');
+    const line1Contact = getVal('line1Contact');
 
     const line2Enabled = getCheck('line2Enabled');
     const line2DisplayName = getVal('line2DisplayName');
     const line2Extension = getVal('line2Extension');
     const line2AuthName = getVal('line2AuthName');
     const line2Password = getVal('line2Password');
+    const line2Contact = getVal('line2Contact');
 
     const hotlineEnabled = getCheck('hotlineEnabled');
     const hotlineNumber = getVal('hotlineNumber');
 
-    const speedDial1Enabled = getCheck('speedDial1Enabled');
-    const speedDial1Number = getVal('speedDial1Number');
-    const speedDial1Monitor = getVal('speedDial1Monitor');
-
-    const speedDial2Enabled = getCheck('speedDial2Enabled');
-    const speedDial2Number = getVal('speedDial2Number');
-    const speedDial2Monitor = getVal('speedDial2Monitor');
-
     const webAccess = getCheck('webAccess');
 
-    let xml = `<?xml version="1.0" encoding="UTF-8"?>
-<device>
-    <fullConfig>true</fullConfig>
-    <deviceProtocol>SIP</deviceProtocol>
+    let xml = `<device>
+   <deviceProtocol>SIP</deviceProtocol>
+   <sshUserId>${sshUser}</sshUserId>
+   <sshPassword>${sshPass}</sshPassword>
+   <devicePool>
+      <dateTimeSetting>
+         <dateTemplate>D/M/YY</dateTemplate>
+         <timeZone>${timeZone}</timeZone>
+         <ntps>
+            <ntp>
+               <name>${ntpServer}</name>
+               <ntpMode>Unicast</ntpMode>
+            </ntp>
+         </ntps>
+      </dateTimeSetting>
+      <callManagerGroup>
+         <members>
+            <member priority="0">
+               <callManager>
+                  <ports>
+                     <ethernetPhonePort>2000</ethernetPhonePort>
+                     <sipPort>${sipPort}</sipPort>
+                     <securedSipPort>5061</securedSipPort>
+                  </ports>
+                  <processNodeName>${sipServer}</processNodeName>
+               </callManager>
+            </member>
+         </members>
+      </callManagerGroup>
+   </devicePool>
+   <sipProfile>
+      <sipProxies>
+         <backupProxy></backupProxy>
+         <backupProxyPort>5060</backupProxyPort>
+         <emergencyProxy></emergencyProxy>
+         <emergencyProxyPort></emergencyProxyPort>
+         <outboundProxy></outboundProxy>
+         <outboundProxyPort></outboundProxyPort>
+         <registerWithProxy>true</registerWithProxy>
+      </sipProxies>
+      <sipCallFeatures>
+         <cnfJoinEnabled>true</cnfJoinEnabled>
+         <callForwardURI>x-serviceuri-cfwdall</callForwardURI>
+         <callPickupURI>x-cisco-serviceuri-pickup</callPickupURI>
+         <callPickupListURI>x-cisco-serviceuri-opickup</callPickupListURI>
+         <callPickupGroupURI>x-cisco-serviceuri-gpickup</callPickupGroupURI>
+         <meetMeServiceURI>x-cisco-serviceuri-meetme</meetMeServiceURI>
+         <abbreviatedDialURI>x-cisco-serviceuri-abbrdial</abbreviatedDialURI>
+         <rfc2543Hold>false</rfc2543Hold>
+         <callHoldRingback>2</callHoldRingback>
+         <localCfwdEnable>true</localCfwdEnable>
+         <semiAttendedTransfer>true</semiAttendedTransfer>
+         <anonymousCallBlock>2</anonymousCallBlock>
+         <callerIdBlocking>2</callerIdBlocking>
+         <dndControl>0</dndControl>
+         <remoteCcEnable>true</remoteCcEnable>
+      </sipCallFeatures>
+      <sipStack>
+         <sipInviteRetx>6</sipInviteRetx>
+         <sipRetx>10</sipRetx>
+         <timerInviteExpires>180</timerInviteExpires>
+         <timerRegisterExpires>${registerExpires}</timerRegisterExpires>
+         <timerRegisterDelta>5</timerRegisterDelta>
+         <timerKeepAliveExpires>120</timerKeepAliveExpires>
+         <timerSubscribeExpires>120</timerSubscribeExpires>
+         <timerSubscribeDelta>5</timerSubscribeDelta>
+         <timerT1>500</timerT1>
+         <timerT2>4000</timerT2>
+         <maxRedirects>70</maxRedirects>
+         <remotePartyID>false</remotePartyID>
+         <userInfo>None</userInfo>
+      </sipStack>
+      <autoAnswerTimer>1</autoAnswerTimer>
+      <autoAnswerAltBehavior>false</autoAnswerAltBehavior>
+      <autoAnswerOverride>true</autoAnswerOverride>
+      <transferOnhookEnabled>false</transferOnhookEnabled>
+      <enableVad>false</enableVad>
+      <dtmfAvtPayload>101</dtmfAvtPayload>
+      <dtmfDbLevel>3</dtmfDbLevel>
+      <dtmfOutofBand>avt</dtmfOutofBand>
+      <alwaysUsePrimeLine>false</alwaysUsePrimeLine>
+      <alwaysUsePrimeLineVoiceMail>false</alwaysUsePrimeLineVoiceMail>
+      <kpml>3</kpml>
+      <phoneLabel>${phoneLabel}</phoneLabel>
+      <stutterMsgWaiting>1</stutterMsgWaiting>
+      <callStats>false</callStats>
+      <silentPeriodBetweenCallWaitingBursts>10</silentPeriodBetweenCallWaitingBursts>
+      <disableLocalSpeedDialConfig>false</disableLocalSpeedDialConfig>
+      <sipLines>`;
 
-    <devicePool>
-        <dateTimeSetting>
-            <dateTemplate>D-M-Ya</dateTemplate>
-            <timeZone>${timeZone}</timeZone>
-            <ntps>
-                <ntp>
-                    <name>${ntpServer}</name>
-                    <ntpMode>Unicast</ntpMode>
-                </ntp>
-            </ntps>
-        </dateTimeSetting>
-        <callManagerGroup>
-            <members>
-                <member priority="0">
-                    <callManager>
-                        <processNodeName>${sipServer}</processNodeName>
-                        <ports>
-                            <sipPort>${sipPort}</sipPort>
-                        </ports>
-                    </callManager>
-                </member>
-            </members>
-        </callManagerGroup>
-    </devicePool>
-
-    <userLocale>
-        <name>Español_Venezuela</name>
-        <langCode>es_VE</langCode>
-        <winCharSet>utf-8</winCharSet>
-    </userLocale>
-    <networkLocale>Venezuela</networkLocale>`;
-
+    // Línea 1
     if (line1Enabled) {
         xml += `
-    <line>
-        <featureID>1</featureID>
-        <displayName>${line1DisplayName}</displayName>
-        <directoryURI>${line1Extension}</directoryURI>
-        <authenticationName>${line1AuthName}</authenticationName>
-        <authenticationPassword>${line1Password}</authenticationPassword>
-        <proxy>${sipServer}</proxy>
-        <sipProfile>
-            <timerRegisterExpires>${registerExpires}</timerRegisterExpires>
-        </sipProfile>`;
+         <line button="1">
+            <featureID>9</featureID>
+            <featureLabel>${line1DisplayName}</featureLabel>
+            <proxy>${sipServer}</proxy>
+            <port>${sipPort}</port>
+            <name>${line1Extension}</name>
+            <displayName>${line1DisplayName}</displayName>
+            <autoAnswer>
+               <autoAnswerEnabled>2</autoAnswerEnabled>
+            </autoAnswer>
+            <callWaiting>3</callWaiting>
+            <authName>${line1AuthName}</authName>
+            <authPassword>${line1Password}</authPassword>
+            <sharedLine>false</sharedLine>
+            <messageWaitingLampPolicy>1</messageWaitingLampPolicy>
+            <messagesNumber>*97</messagesNumber>
+            <ringSettingIdle>4</ringSettingIdle>
+            <ringSettingActive>5</ringSettingActive>
+            <contact>${line1Contact || line1Extension}</contact>
+            <forwardCallInfoDisplay>
+               <callerName>true</callerName>
+               <callerNumber>false</callerNumber>
+               <redirectedNumber>false</redirectedNumber>
+               <dialedNumber>true</dialedNumber>
+            </forwardCallInfoDisplay>`;
 
         if (hotlineEnabled) {
             xml += `
-        <dialTemplate>
-            <dialTemplateEntry>
-                <template>^.*$</template>
-                <timeout>0</timeout>
-                <user>${hotlineNumber}</user>
-            </dialTemplateEntry>
-        </dialTemplate>`;
+            <dialTemplate>
+               <dialTemplateEntry>
+                  <template>^.*$</template>
+                  <timeout>0</timeout>
+                  <user>${hotlineNumber}</user>
+               </dialTemplateEntry>
+            </dialTemplate>`;
         }
 
         xml += `
-    </line>`;
+         </line>`;
     }
 
+    // Línea 2
     if (line2Enabled) {
         xml += `
-    <line>
-        <featureID>2</featureID>
-        <displayName>${line2DisplayName}</displayName>
-        <directoryURI>${line2Extension}</directoryURI>
-        <authenticationName>${line2AuthName}</authenticationName>
-        <authenticationPassword>${line2Password}</authenticationPassword>
-        <proxy>${sipServer}</proxy>
-        <sipProfile>
-            <timerRegisterExpires>${registerExpires}</timerRegisterExpires>
-        </sipProfile>
-    </line>`;
-    }
-
-    if (speedDial1Enabled || speedDial2Enabled) {
-        xml += `
-    <extendedFunction>`;
-        
-        if (speedDial1Enabled) {
-            xml += `
-        fnc=sd+blf;sub=${speedDial1Monitor}@${sipServer};ext=${speedDial1Number}@${sipServer};`;
-        }
-        
-        if (speedDial2Enabled) {
-            xml += `
-        fnc=sd+blf;sub=${speedDial2Monitor}@${sipServer};ext=${speedDial2Number}@${sipServer};`;
-        }
-        
-        xml += `
-    </extendedFunction>`;
+         <line button="2">
+            <featureID>9</featureID>
+            <featureLabel>${line2DisplayName}</featureLabel>
+            <proxy>${sipServer}</proxy>
+            <port>${sipPort}</port>
+            <name>${line2Extension}</name>
+            <displayName>${line2DisplayName}</displayName>
+            <autoAnswer>
+               <autoAnswerEnabled>2</autoAnswerEnabled>
+            </autoAnswer>
+            <callWaiting>3</callWaiting>
+            <authName>${line2AuthName}</authName>
+            <authPassword>${line2Password}</authPassword>
+            <sharedLine>false</sharedLine>
+            <messageWaitingLampPolicy>1</messageWaitingLampPolicy>
+            <messagesNumber>*97</messagesNumber>
+            <ringSettingIdle>4</ringSettingIdle>
+            <ringSettingActive>5</ringSettingActive>
+            <contact>${line2Contact || line2Extension}</contact>
+            <forwardCallInfoDisplay>
+               <callerName>true</callerName>
+               <callerNumber>false</callerNumber>
+               <redirectedNumber>false</redirectedNumber>
+               <dialedNumber>true</dialedNumber>
+            </forwardCallInfoDisplay>
+         </line>`;
     }
 
     xml += `
-    <vendorConfig>
-        <webAccess>${webAccess ? '1' : '0'}</webAccess>
-    </vendorConfig>
+      </sipLines>
+      <voipControlPort>5060</voipControlPort>
+      <startMediaPort>16348</startMediaPort>
+      <stopMediaPort>20134</stopMediaPort>
+      <dscpForAudio>184</dscpForAudio>
+      <ringSettingBusyStationPolicy>0</ringSettingBusyStationPolicy>
+      <dialTemplate>dialplan.xml</dialTemplate>
+      <softKeyFile></softKeyFile>
+   </sipProfile>
+   <commonProfile>
+      <phonePassword></phonePassword>
+      <backgroundImageAccess>true</backgroundImageAccess>
+      <callLogBlfEnabled>2</callLogBlfEnabled>
+   </commonProfile>
+   <loadInformation>sip78xx.10-1-1SR1-4</loadInformation>
+   <vendorConfig>
+      <disableSpeaker>false</disableSpeaker>
+      <disableSpeakerAndHeadset>false</disableSpeakerAndHeadset>
+      <pcPort>0</pcPort>
+      <settingsAccess>1</settingsAccess>
+      <garp>0</garp>
+      <voiceVlanAccess>0</voiceVlanAccess>
+      <videoCapability>0</videoCapability>
+      <autoSelectLineEnable>0</autoSelectLineEnable>
+      <webAccess>${webAccess ? '1' : '0'}</webAccess>
+      <daysDisplayNotActive>1,2,3,4,5,6,7</daysDisplayNotActive>
+      <displayOnTime>00:00</displayOnTime>
+      <displayOnDuration>00:00</displayOnDuration>
+      <displayIdleTimeout>00:00</displayIdleTimeout>
+      <spanToPCPort>1</spanToPCPort>
+      <loggingDisplay>1</loggingDisplay>
+      <loadServer></loadServer>
+   </vendorConfig>
+   <userLocale>
+      <name></name>
+      <uid></uid>
+      <langCode>en_US</langCode>
+      <version>1.0.0.0-1</version>
+      <winCharSet>iso-8859-1</winCharSet>
+   </userLocale>
+   <networkLocale></networkLocale>
+   <networkLocaleInfo>
+      <name></name>
+      <uid></uid>
+      <version>1.0.0.0-1</version>
+   </networkLocaleInfo>
+   <deviceSecurityMode>1</deviceSecurityMode>
+   <authenticationURL></authenticationURL>
+   <directoryURL>${directoryURL}</directoryURL>
+   <servicesURL></servicesURL>
+   <idleURL></idleURL>
+   <informationURL></informationURL>
+   <messagesURL></messagesURL>
+   <proxyServerURL></proxyServerURL>
+   <dscpForSCCPPhoneConfig>96</dscpForSCCPPhoneConfig>
+   <dscpForSCCPPhoneServices>0</dscpForSCCPPhoneServices>
+   <dscpForCm2Dvce>96</dscpForCm2Dvce>
+   <transportLayerProtocol>2</transportLayerProtocol>
+   <capfAuthMode>0</capfAuthMode>
+   <capfList>
+      <capf>
+         <phonePort>3804</phonePort>
+      </capf>
+   </capfList>
+   <certHash></certHash>
+   <encrConfig>false</encrConfig>
 </device>`;
 
     document.getElementById('xmlPreview').textContent = xml;

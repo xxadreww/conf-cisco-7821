@@ -41,7 +41,7 @@
             <div class="step-divider"></div>
             <button type="button" class="step-link" onclick="goToStep(3)">
                 <span class="step-num">3</span>
-                <span class="step-text">Teclas y Opciones</span>
+                <span class="step-text">Opciones de Sistema</span>
             </button>
             <div class="step-divider"></div>
             <button type="button" class="step-link" onclick="goToStep(4)">
@@ -65,48 +65,82 @@
                             <label for="macAddress">Dirección MAC</label>
                             <button type="button" class="info-btn" data-tooltip="Dirección física MAC del teléfono de 12 caracteres hexadecimales sin separadores (ej: AABBCCDDEEFF).">?</button>
                         </div>
-                        <input type="text" id="macAddress" value="AABBCCDDEEFF" placeholder="AABBCCDDEEFF" />
+                        <input type="text" id="macAddress" value="" placeholder="Ej: AABBCCDDEEFF" />
                     </div>
+                    <div class="field-group">
+                        <div class="label-with-help">
+                            <label for="phoneLabel">Etiqueta del Teléfono</label>
+                            <button type="button" class="info-btn tooltip-left" data-tooltip="Etiqueta que se mostrará en la pantalla del teléfono (ej: CORPOELEC).">?</button>
+                        </div>
+                        <input type="text" id="phoneLabel" value="" placeholder="Ej: CORPOELEC" />
+                    </div>
+                </div>
+
+                <div class="grid-2">
                     <div class="field-group">
                         <div class="label-with-help">
                             <label for="sipServer">Servidor SIP (IP / Dominio)</label>
-                            <button type="button" class="info-btn tooltip-left" data-tooltip="Dirección IP o dominio del servidor de telefonía (PBX / Asterisk / Issabel) al que se registrará el teléfono.">?</button>
+                            <button type="button" class="info-btn" data-tooltip="Dirección IP o dominio del servidor de telefonía (PBX / Asterisk / Issabel).">?</button>
                         </div>
-                        <input type="text" id="sipServer" value="192.168.1.100" placeholder="192.168.1.100" />
+                        <input type="text" id="sipServer" value="" placeholder="Ej: 192.168.1.100" />
                     </div>
-                </div>
-
-                <div class="grid-2">
                     <div class="field-group">
                         <div class="label-with-help">
                             <label for="sipPort">Puerto SIP</label>
-                            <button type="button" class="info-btn" data-tooltip="Puerto de escucha del servicio SIP en la PBX. Por defecto en UDP/TCP suele ser 5060.">?</button>
+                            <button type="button" class="info-btn tooltip-left" data-tooltip="Puerto de escucha del servicio SIP. Por defecto suele ser 5060.">?</button>
                         </div>
-                        <input type="text" id="sipPort" value="5060" placeholder="5060" />
-                    </div>
-                    <div class="field-group">
-                        <div class="label-with-help">
-                            <label for="ntpServer">Servidor NTP</label>
-                            <button type="button" class="info-btn tooltip-left" data-tooltip="Servidor de sincronización horaria para mostrar la fecha y hora correctas en la pantalla del teléfono.">?</button>
-                        </div>
-                        <input type="text" id="ntpServer" value="pool.ntp.org" placeholder="pool.ntp.org" />
+                        <input type="text" id="sipPort" value="" placeholder="Ej: 5060" />
                     </div>
                 </div>
 
                 <div class="grid-2">
                     <div class="field-group">
                         <div class="label-with-help">
-                            <label for="timeZone">Zona Horaria</label>
-                            <button type="button" class="info-btn" data-tooltip="Ajuste de zona horaria del terminal. Para Venezuela corresponde a VET (-04:00).">?</button>
+                            <label for="ntpServer">Servidor NTP (opcional)</label>
+                            <button type="button" class="info-btn" data-tooltip="Servidor de sincronización horaria. Dejar vacío si no se requiere.">?</button>
                         </div>
-                        <input type="text" id="timeZone" value="SA Western Standard Time" placeholder="SA Western Standard Time" />
+                        <input type="text" id="ntpServer" value="" placeholder="Ej: pool.ntp.org (opcional)" />
                     </div>
                     <div class="field-group">
                         <div class="label-with-help">
-                            <label for="registerExpires">Tiempo de Registro (Segundos)</label>
-                            <button type="button" class="info-btn tooltip-left" data-tooltip="Frecuencia en segundos con la que el teléfono renueva su registro activo con el servidor SIP.">?</button>
+                            <label for="timeZone">Zona Horaria</label>
+                            <button type="button" class="info-btn tooltip-left" data-tooltip="Zona horaria del terminal. Ej: South America Standard/Daylight Time.">?</button>
                         </div>
-                        <input type="text" id="registerExpires" value="120" placeholder="120" />
+                        <input type="text" id="timeZone" value="" placeholder="Ej: South America Standard/Daylight Time" />
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="field-group">
+                        <div class="label-with-help">
+                            <label for="registerExpires">Tiempo de Registro (Segundos)</label>
+                            <button type="button" class="info-btn" data-tooltip="Frecuencia en segundos con la que el teléfono renueva su registro. Ej: 3600.">?</button>
+                        </div>
+                        <input type="text" id="registerExpires" value="" placeholder="Ej: 3600" />
+                    </div>
+                    <div class="field-group">
+                        <div class="label-with-help">
+                            <label for="directoryURL">URL de Directorio (opcional)</label>
+                            <button type="button" class="info-btn tooltip-left" data-tooltip="URL del servidor de directorio telefónico (opcional).">?</button>
+                        </div>
+                        <input type="text" id="directoryURL" value="" placeholder="Ej: 10.96.36.156" />
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="field-group">
+                        <div class="label-with-help">
+                            <label for="sshUser">Usuario SSH (opcional)</label>
+                            <button type="button" class="info-btn" data-tooltip="Usuario para acceso SSH al teléfono (opcional).">?</button>
+                        </div>
+                        <input type="text" id="sshUser" value="" placeholder="Ej: ATIT" />
+                    </div>
+                    <div class="field-group">
+                        <div class="label-with-help">
+                            <label for="sshPass">Contraseña SSH (opcional)</label>
+                            <button type="button" class="info-btn tooltip-left" data-tooltip="Contraseña para acceso SSH (opcional).">?</button>
+                        </div>
+                        <input type="text" id="sshPass" value="" placeholder="Ej: ATIT" />
                     </div>
                 </div>
             </div>
@@ -122,47 +156,56 @@
                 <div class="card-section">
                     <div class="card-header">
                         <label class="toggle-control">
-                            <input type="checkbox" id="line1Enabled" checked />
+                            <input type="checkbox" id="line1Enabled" />
                             <span class="toggle-slider"></span>
                             <span class="toggle-title">Habilitar Línea 1</span>
                         </label>
                     </div>
-                    <div class="card-body" id="line1Fields">
+                    <div class="card-body" id="line1Fields" style="display: none;">
                         <div class="grid-2">
                             <div class="field-group">
                                 <div class="label-with-help">
                                     <label for="line1DisplayName">Nombre a Mostrar</label>
-                                    <button type="button" class="info-btn" data-tooltip="Texto o nombre del usuario que se mostrará en la pantalla principal del dispositivo.">?</button>
+                                    <button type="button" class="info-btn" data-tooltip="Nombre del usuario que se mostrará en la pantalla.">?</button>
                                 </div>
-                                <input type="text" id="line1DisplayName" value="Soporte Técnico" />
+                                <input type="text" id="line1DisplayName" value="" placeholder="Ej: MARIA NAVARRO 44990" />
                             </div>
                             <div class="field-group">
                                 <div class="label-with-help">
                                     <label for="line1Extension">Extensión</label>
-                                    <button type="button" class="info-btn tooltip-left" data-tooltip="Número de extensión interno asignado a este teléfono en la PBX.">?</button>
+                                    <button type="button" class="info-btn tooltip-left" data-tooltip="Número de extensión interno.">?</button>
                                 </div>
-                                <input type="text" id="line1Extension" value="101" />
+                                <input type="text" id="line1Extension" value="" placeholder="Ej: 44990" />
                             </div>
                         </div>
                         <div class="grid-2">
                             <div class="field-group">
                                 <div class="label-with-help">
                                     <label for="line1AuthName">Usuario SIP</label>
-                                    <button type="button" class="info-btn" data-tooltip="Nombre de usuario o ID de autenticación registrado para la cuenta SIP en el servidor.">?</button>
+                                    <button type="button" class="info-btn" data-tooltip="Nombre de usuario para autenticación SIP.">?</button>
                                 </div>
-                                <input type="text" id="line1AuthName" value="101" />
+                                <input type="text" id="line1AuthName" value="" placeholder="Ej: 44990" />
                             </div>
                             <div class="field-group">
                                 <div class="label-with-help">
                                     <label for="line1Password">Contraseña SIP</label>
-                                    <button type="button" class="info-btn tooltip-left" data-tooltip="Clave de autenticación para validar la extensión frente a la PBX.">?</button>
+                                    <button type="button" class="info-btn tooltip-left" data-tooltip="Clave de autenticación SIP.">?</button>
                                 </div>
                                 <div class="input-password-wrapper">
-                                    <input type="password" id="line1Password" value="password123" />
+                                    <input type="password" id="line1Password" value="" placeholder="Ej: mc12345" />
                                     <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('line1Password', this)">
                                         <svg class="eye-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                                     </button>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="grid-2">
+                            <div class="field-group">
+                                <div class="label-with-help">
+                                    <label for="line1Contact">Contacto (opcional)</label>
+                                    <button type="button" class="info-btn" data-tooltip="Identificador de contacto SIP (opcional, por defecto usa la extensión).">?</button>
+                                </div>
+                                <input type="text" id="line1Contact" value="" placeholder="Ej: 0797" />
                             </div>
                         </div>
 
@@ -173,15 +216,15 @@
                                     <input type="checkbox" id="hotlineEnabled" />
                                     <span>Activar Hotline (Línea Directa)</span>
                                 </label>
-                                <button type="button" class="info-btn tooltip-left" data-tooltip="Modo 'Warm/Hotline': al descolgar el auricular se marca automáticamente al número configurado sin dar tono de marcado libre.">?</button>
+                                <button type="button" class="info-btn tooltip-left" data-tooltip="Al descolgar el auricular se marca automáticamente al número configurado.">?</button>
                             </div>
                             <div id="hotlineFields" class="sub-card-body" style="display: none;">
                                 <div class="field-group">
                                     <div class="label-with-help">
                                         <label for="hotlineNumber">Número / Extensión a Marcar</label>
-                                        <button type="button" class="info-btn" data-tooltip="Destino al que llamará inmediatamente el teléfono al levantarse de la cuna.">?</button>
+                                        <button type="button" class="info-btn" data-tooltip="Destino al que llamará al levantarse de la cuna.">?</button>
                                     </div>
-                                    <input type="text" id="hotlineNumber" value="100" placeholder="100" />
+                                    <input type="text" id="hotlineNumber" value="" placeholder="Ej: 100" />
                                 </div>
                             </div>
                         </div>
@@ -192,131 +235,69 @@
                 <div class="card-section">
                     <div class="card-header">
                         <label class="toggle-control">
-                            <input type="checkbox" id="line2Enabled" checked />
+                            <input type="checkbox" id="line2Enabled" />
                             <span class="toggle-slider"></span>
                             <span class="toggle-title">Habilitar Línea 2</span>
                         </label>
                     </div>
-                    <div class="card-body" id="line2Fields">
+                    <div class="card-body" id="line2Fields" style="display: none;">
                         <div class="grid-2">
                             <div class="field-group">
                                 <div class="label-with-help">
                                     <label for="line2DisplayName">Nombre a Mostrar</label>
-                                    <button type="button" class="info-btn" data-tooltip="Etiqueta identificativa para la segunda línea telefónica.">?</button>
+                                    <button type="button" class="info-btn" data-tooltip="Nombre del usuario para la segunda línea.">?</button>
                                 </div>
-                                <input type="text" id="line2DisplayName" value="Ventas" />
+                                <input type="text" id="line2DisplayName" value="" placeholder="Ej: JOEY DANIELS 35001" />
                             </div>
                             <div class="field-group">
                                 <div class="label-with-help">
                                     <label for="line2Extension">Extensión</label>
-                                    <button type="button" class="info-btn tooltip-left" data-tooltip="Número de extensión asignado a la segunda línea.">?</button>
+                                    <button type="button" class="info-btn tooltip-left" data-tooltip="Número de extensión para la segunda línea.">?</button>
                                 </div>
-                                <input type="text" id="line2Extension" value="102" />
+                                <input type="text" id="line2Extension" value="" placeholder="Ej: 35001" />
                             </div>
                         </div>
                         <div class="grid-2">
                             <div class="field-group">
                                 <div class="label-with-help">
                                     <label for="line2AuthName">Usuario SIP</label>
-                                    <button type="button" class="info-btn" data-tooltip="Usuario de autenticación SIP asignado a la línea 2.">?</button>
+                                    <button type="button" class="info-btn" data-tooltip="Usuario de autenticación SIP para línea 2.">?</button>
                                 </div>
-                                <input type="text" id="line2AuthName" value="102" />
+                                <input type="text" id="line2AuthName" value="" placeholder="Ej: 35001" />
                             </div>
                             <div class="field-group">
                                 <div class="label-with-help">
                                     <label for="line2Password">Contraseña SIP</label>
-                                    <button type="button" class="info-btn tooltip-left" data-tooltip="Clave secreta para el registro de la línea 2.">?</button>
+                                    <button type="button" class="info-btn tooltip-left" data-tooltip="Clave de autenticación para línea 2.">?</button>
                                 </div>
                                 <div class="input-password-wrapper">
-                                    <input type="password" id="line2Password" value="password456" />
+                                    <input type="password" id="line2Password" value="" placeholder="Ej: mc12345" />
                                     <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('line2Password', this)">
                                         <svg class="eye-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                                     </button>
                                 </div>
                             </div>
                         </div>
+                        <div class="grid-2">
+                            <div class="field-group">
+                                <div class="label-with-help">
+                                    <label for="line2Contact">Contacto (opcional)</label>
+                                    <button type="button" class="info-btn" data-tooltip="Identificador de contacto SIP (opcional).">?</button>
+                                </div>
+                                <input type="text" id="line2Contact" value="" placeholder="Ej: 0798" />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- PASO 3: Teclas y Avanzado -->
+            <!-- PASO 3: Opciones de Sistema (Simplificado) -->
             <div class="step-pane" id="step3">
                 <div class="pane-header">
-                    <h2>Teclas de Función y Seguridad</h2>
-                    <p>Asigna marcaciones rápidas (BLF) y permisos de administración.</p>
+                    <h2>Opciones de Administración</h2>
+                    <p>Configura permisos de acceso y gestión del dispositivo.</p>
                 </div>
 
-                <div class="grid-2">
-                    <!-- Tecla 1 -->
-                    <div class="card-section">
-                        <div class="card-header">
-                            <label class="checkbox-control">
-                                <input type="checkbox" id="speedDial1Enabled" />
-                                <span class="card-title-text">Tecla de Función 1</span>
-                            </label>
-                            <button type="button" class="info-btn tooltip-left" data-tooltip="Configura una tecla de marcación rápida o monitoreo de estado de ocupado (BLF).">?</button>
-                        </div>
-                        <div id="speedDial1Fields" class="card-body" style="display: none;">
-                            <div class="field-group">
-                                <div class="label-with-help">
-                                    <label for="speedDial1Label">Etiqueta</label>
-                                    <button type="button" class="info-btn" data-tooltip="Nombre visible en la pantalla al lado del botón.">?</button>
-                                </div>
-                                <input type="text" id="speedDial1Label" value="Marcar Rápido" />
-                            </div>
-                            <div class="field-group">
-                                <div class="label-with-help">
-                                    <label for="speedDial1Number">Número</label>
-                                    <button type="button" class="info-btn" data-tooltip="Número que se llamará al presionar la tecla.">?</button>
-                                </div>
-                                <input type="text" id="speedDial1Number" value="103" />
-                            </div>
-                            <div class="field-group">
-                                <div class="label-with-help">
-                                    <label for="speedDial1Monitor">Extensión BLF a Monitorear</label>
-                                    <button type="button" class="info-btn" data-tooltip="Extensión remota cuyo estado de llamada (ocupado/libre) se monitoreará mediante los LEDs del teléfono.">?</button>
-                                </div>
-                                <input type="text" id="speedDial1Monitor" value="103" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Tecla 2 -->
-                    <div class="card-section">
-                        <div class="card-header">
-                            <label class="checkbox-control">
-                                <input type="checkbox" id="speedDial2Enabled" />
-                                <span class="card-title-text">Tecla de Función 2</span>
-                            </label>
-                            <button type="button" class="info-btn tooltip-left" data-tooltip="Configura la segunda tecla física lateral programable.">?</button>
-                        </div>
-                        <div id="speedDial2Fields" class="card-body" style="display: none;">
-                            <div class="field-group">
-                                <div class="label-with-help">
-                                    <label for="speedDial2Label">Etiqueta</label>
-                                    <button type="button" class="info-btn" data-tooltip="Texto en pantalla para la segunda tecla.">?</button>
-                                </div>
-                                <input type="text" id="speedDial2Label" value="Marcar Rápido 2" />
-                            </div>
-                            <div class="field-group">
-                                <div class="label-with-help">
-                                    <label for="speedDial2Number">Número</label>
-                                    <button type="button" class="info-btn" data-tooltip="Número a marcar al pulsar la tecla 2.">?</button>
-                                </div>
-                                <input type="text" id="speedDial2Number" value="104" />
-                            </div>
-                            <div class="field-group">
-                                <div class="label-with-help">
-                                    <label for="speedDial2Monitor">Extensión BLF a Monitorear</label>
-                                    <button type="button" class="info-btn" data-tooltip="Extensión secundaría para suscripción BLF.">?</button>
-                                </div>
-                                <input type="text" id="speedDial2Monitor" value="104" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Configuración Avanzada -->
                 <div class="card-section">
                     <div class="card-header">
                         <h3>Opciones de Sistema</h3>
@@ -324,10 +305,10 @@
                     <div class="card-body">
                         <div class="label-with-help">
                             <label class="checkbox-control">
-                                <input type="checkbox" id="webAccess" checked />
+                                <input type="checkbox" id="webAccess" />
                                 <span>Habilitar Interfaz de Administración Web</span>
                             </label>
-                            <button type="button" class="info-btn tooltip-left" data-tooltip="Permite ingresar a la configuración del teléfono vía navegador web a través de su dirección IP.">?</button>
+                            <button type="button" class="info-btn tooltip-left" data-tooltip="Permite ingresar a la configuración del teléfono vía web a través de su dirección IP.">?</button>
                         </div>
                     </div>
                 </div>
@@ -344,7 +325,7 @@
                     <div class="xml-card-header">
                         <div class="xml-title">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                            <span id="fileNameDisplay">SEPAABBCCDDEEFF.cnf.xml</span>
+                            <span id="fileNameDisplay">SEP.cnf.xml</span>
                         </div>
                     </div>
                     <div class="xml-preview-container">
