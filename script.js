@@ -38,16 +38,15 @@ function togglePasswordVisibility(inputId, btn) {
     btn.innerHTML = isPassword ? eyeOff : eyeOpen;
 }
 
-// Sanitización: Permite letras, números, puntos, guiones, barras y espacios
+// Validación: solo letras y números (sin acentos ni caracteres especiales)
 function sanitizeInput(value) {
-    // Permite: letras (con acentos), números, espacios, puntos, guiones, barras, arroba
-    return value.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s\.\-/@]/g, '');
+    return value.replace(/[^a-zA-Z0-9]/g, '');
 }
 
 function getVal(id) {
     const el = document.getElementById(id);
     if (!el) return '';
-    return el.value;
+    return sanitizeInput(el.value);
 }
 
 function getCheck(id) {
@@ -58,17 +57,17 @@ function getCheck(id) {
 // Visibilidad condicional
 document.getElementById('hotlineEnabled').addEventListener('change', function() {
     document.getElementById('hotlineFields').style.display = this.checked ? 'block' : 'none';
-    if (currentStep === 4) generateXML();
+    generateXML();
 });
 
 document.getElementById('line1Enabled').addEventListener('change', function() {
     document.getElementById('line1Fields').style.display = this.checked ? 'block' : 'none';
-    if (currentStep === 4) generateXML();
+    generateXML();
 });
 
 document.getElementById('line2Enabled').addEventListener('change', function() {
     document.getElementById('line2Fields').style.display = this.checked ? 'block' : 'none';
-    if (currentStep === 4) generateXML();
+    generateXML();
 });
 
 // GENERACIÓN XML - SIN encoding
@@ -241,7 +240,7 @@ function generateXML() {
     if (line2Enabled) {
         xml += `
          <line button="2">
-            <featureID>21</featureID>
+            <featureID>9</featureID>
             <featureLabel>${line2DisplayName}</featureLabel>
             <proxy>${sipServer}</proxy>
             <port>${sipPort}</port>
@@ -355,15 +354,9 @@ function downloadXML() {
     URL.revokeObjectURL(url);
 }
 
-// Event listeners para actualizar el XML en tiempo real
 document.querySelectorAll('input').forEach(input => {
-    input.addEventListener('input', function() {
-        if (currentStep === 4) generateXML();
-    });
-    input.addEventListener('change', function() {
-        if (currentStep === 4) generateXML();
-    });
+    input.addEventListener('input', generateXML);
+    input.addEventListener('change', generateXML);
 });
 
-// Generar XML inicial (para el paso 4)
 generateXML();
