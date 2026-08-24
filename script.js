@@ -38,15 +38,16 @@ function togglePasswordVisibility(inputId, btn) {
     btn.innerHTML = isPassword ? eyeOff : eyeOpen;
 }
 
-// Validación: solo letras y números (sin acentos ni caracteres especiales)
+// Sanitización: Permite letras, números, puntos, guiones, barras y espacios
 function sanitizeInput(value) {
-    return value.replace(/[^a-zA-Z0-9]/g, '');
+    // Permite: letras (con acentos), números, espacios, puntos, guiones, barras, arroba
+    return value.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s\.\-/@]/g, '');
 }
 
 function getVal(id) {
     const el = document.getElementById(id);
     if (!el) return '';
-    return sanitizeInput(el.value);
+    return el.value;
 }
 
 function getCheck(id) {
@@ -57,17 +58,17 @@ function getCheck(id) {
 // Visibilidad condicional
 document.getElementById('hotlineEnabled').addEventListener('change', function() {
     document.getElementById('hotlineFields').style.display = this.checked ? 'block' : 'none';
-    generateXML();
+    if (currentStep === 4) generateXML();
 });
 
 document.getElementById('line1Enabled').addEventListener('change', function() {
     document.getElementById('line1Fields').style.display = this.checked ? 'block' : 'none';
-    generateXML();
+    if (currentStep === 4) generateXML();
 });
 
 document.getElementById('line2Enabled').addEventListener('change', function() {
     document.getElementById('line2Fields').style.display = this.checked ? 'block' : 'none';
-    generateXML();
+    if (currentStep === 4) generateXML();
 });
 
 // GENERACIÓN XML - SIN encoding
@@ -354,9 +355,15 @@ function downloadXML() {
     URL.revokeObjectURL(url);
 }
 
+// Event listeners para actualizar el XML en tiempo real
 document.querySelectorAll('input').forEach(input => {
-    input.addEventListener('input', generateXML);
-    input.addEventListener('change', generateXML);
+    input.addEventListener('input', function() {
+        if (currentStep === 4) generateXML();
+    });
+    input.addEventListener('change', function() {
+        if (currentStep === 4) generateXML();
+    });
 });
 
+// Generar XML inicial (para el paso 4)
 generateXML();
