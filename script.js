@@ -241,7 +241,7 @@ function generateXML() {
     if (line2Enabled) {
         xml += `
          <line button="2">
-            <featureID>9</featureID>
+            <featureID>21</featureID>
             <featureLabel>${line2DisplayName}</featureLabel>
             <proxy>${sipServer}</proxy>
             <port>${sipPort}</port>
