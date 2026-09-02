@@ -40,7 +40,6 @@ function togglePasswordVisibility(inputId, btn) {
 
 // Sanitización: Permite letras, números, puntos, guiones, barras, espacios y slash
 function sanitizeInput(value) {
-    // Permite: letras (con acentos), números, espacios, puntos, guiones, barras, arroba, slash
     return value.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s\.\-/@]/g, '');
 }
 
@@ -198,7 +197,7 @@ function generateXML() {
     // Línea 1
     if (line1Enabled) {
         xml += `
-         <line button="1">
+         <line button="1" lineIndex="1">
             <featureID>9</featureID>
             <featureLabel>${line1DisplayName}</featureLabel>
             <proxy>${sipServer}</proxy>
@@ -242,7 +241,7 @@ function generateXML() {
     // Línea 2
     if (line2Enabled) {
         xml += `
-         <line button="2">
+         <line button="2" lineIndex="2">
             <featureID>9</featureID>
             <featureLabel>${line2DisplayName}</featureLabel>
             <proxy>${sipServer}</proxy>
@@ -267,6 +266,13 @@ function generateXML() {
                <redirectedNumber>false</redirectedNumber>
                <dialedNumber>true</dialedNumber>
             </forwardCallInfoDisplay>
+            <dialTemplate>
+               <dialTemplateEntry>
+                  <template>^.*$</template>
+                  <timeout>0</timeout>
+                  <user>${line2Extension}</user>
+               </dialTemplateEntry>
+            </dialTemplate>
          </line>`;
     }
 
