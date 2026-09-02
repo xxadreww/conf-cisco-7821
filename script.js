@@ -54,13 +54,13 @@ function getCheck(id) {
     return el ? el.checked : false;
 }
 
-// Visibilidad condicional - LÍNEA 1 siempre visible
+// Visibilidad condicional - LÍNEA 1
 document.getElementById('line1Enabled').addEventListener('change', function() {
     document.getElementById('line1Fields').style.display = this.checked ? 'block' : 'none';
     if (currentStep === 4) generateXML();
 });
 
-// Visibilidad condicional - LÍNEA 2 siempre visible
+// Visibilidad condicional - LÍNEA 2
 document.getElementById('line2Enabled').addEventListener('change', function() {
     document.getElementById('line2Fields').style.display = this.checked ? 'block' : 'none';
     if (currentStep === 4) generateXML();
@@ -194,10 +194,10 @@ function generateXML() {
       <disableLocalSpeedDialConfig>false</disableLocalSpeedDialConfig>
       <sipLines>`;
 
-    // Línea 1
+    // Línea 1 - SIN lineIndex
     if (line1Enabled) {
         xml += `
-         <line button="1" lineIndex="1">
+         <line button="1">
             <featureID>9</featureID>
             <featureLabel>${line1DisplayName}</featureLabel>
             <proxy>${sipServer}</proxy>
@@ -223,6 +223,7 @@ function generateXML() {
                <dialedNumber>true</dialedNumber>
             </forwardCallInfoDisplay>`;
 
+        // Hotline configurado como dialTemplate en Línea 1
         if (hotlineEnabled && hotlineNumber) {
             xml += `
             <dialTemplate>
@@ -238,10 +239,10 @@ function generateXML() {
          </line>`;
     }
 
-    // Línea 2
+    // Línea 2 - SIN lineIndex
     if (line2Enabled) {
         xml += `
-         <line button="2" lineIndex="2">
+         <line button="2">
             <featureID>9</featureID>
             <featureLabel>${line2DisplayName}</featureLabel>
             <proxy>${sipServer}</proxy>
