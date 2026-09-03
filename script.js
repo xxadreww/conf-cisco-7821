@@ -351,8 +351,11 @@ function generateXML() {
 }
 
 function downloadXML() {
+    // Keep the header shortcut synchronized with the latest form values.
+    generateXML();
     const xml = document.getElementById('xmlPreview').textContent;
     const mac = getVal('macAddress');
+    if (!xml || !mac) return;
     const blob = new Blob([xml], { type: 'text/xml' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
