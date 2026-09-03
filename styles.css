@@ -526,7 +526,7 @@ input[type="password"]:focus {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 10px 20px;
+    padding: 5px 10px;
     font-size: 0.875rem;
     font-weight: 500;
     border-radius: var(--radius-md);
@@ -560,7 +560,7 @@ input[type="password"]:focus {
 }
 
 .btn-success {
-    background: var(--success);
+    background: #0b7aeb;
     color: white;
 }
 
